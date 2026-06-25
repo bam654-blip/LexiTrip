@@ -6,7 +6,6 @@
 <title>Oregon & CA Coast · July 2025</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Inter:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -259,4 +258,909 @@ main{max-width:740px;margin:0 auto;padding:1.2rem 1.1rem 4rem}
 <div class="drawer" id="drawer">
   <p class="drawer-label">Overview</p>
   <a href="#map-section" onclick="closeMenu()"><span class="di">🗺</span> Live Trip Map</a>
-  <a hre
+  <a href="#dashboard" onclick="closeMenu()"><span class="di">📊</span> Dashboard</a>
+  <a href="#summary" onclick="closeMenu()"><span class="di">📋</span> Trip Summary</a>
+  <a href="#bookahead" onclick="closeMenu()"><span class="di">⚠️</span> Book Ahead Now</a>
+  <hr/>
+  <p class="drawer-label">Itinerary</p>
+  <a href="#oregon1" onclick="closeMenu()"><span class="di">🌊</span> Cannon Beach · Jul 2–7</a>
+  <a href="#lincoln" onclick="closeMenu()"><span class="di">🔵</span> Lincoln City · Jul 7–10</a>
+  <a href="#yachats" onclick="closeMenu()"><span class="di">🌲</span> Yachats · Jul 10–13</a>
+  <a href="#california" onclick="closeMenu()"><span class="di">🌁</span> Redwoods · Jul 13–16</a>
+  <a href="#fortbragg" onclick="closeMenu()"><span class="di">💎</span> Fort Bragg · Jul 16–18</a>
+  <a href="#craterlake" onclick="closeMenu()"><span class="di">🌋</span> Crater Lake · Jul 18–21</a>
+  <a href="#bend" onclick="closeMenu()"><span class="di">🧗</span> Bend · Jul 21–24</a>
+  <hr/>
+  <p class="drawer-label">Reference</p>
+  <a href="#hotels" onclick="closeMenu()"><span class="di">🏨</span> All Hotels</a>
+  <a href="#seaglass" onclick="closeMenu()"><span class="di">💎</span> Sea Glass Beaches</a>
+  <a href="#hikes" onclick="closeMenu()"><span class="di">🥾</span> Best Exposed Hikes</a>
+</div>
+<div class="overlay" id="overlay" onclick="closeMenu()"></div>
+
+<main>
+
+<!-- LIVE MAP -->
+<div id="map-section">
+  <div class="sec-header" style="margin-top:.4rem">
+    <span class="sec-icon">🗺</span>
+    <h2 class="sec-title">Live Trip Map</h2>
+  </div>
+  <div class="map-wrap"><div id="trip-map"></div></div>
+  <div class="map-legend">
+    <span class="leg-dot visited"></span><span>Visited</span>
+    <span class="leg-dot today"></span><span>Today</span>
+    <span class="leg-dot future"></span><span>Upcoming</span>
+    <span style="color:var(--muted);font-size:.7rem;margin-left:.3rem">· Tap any pin for details</span>
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div id="dashboard">
+  <div class="sec-header">
+    <span class="sec-icon">📊</span>
+    <h2 class="sec-title">Trip Dashboard</h2>
+  </div>
+  <div class="dashboard">
+    <div class="dash-card today-card">
+      <div class="dash-icon">📍</div>
+      <div><div class="dash-label">You should be at</div><div class="dash-val" id="dash-location">Loading...</div></div>
+    </div>
+    <div class="dash-card">
+      <div class="dash-icon">☀️</div>
+      <div><div class="dash-label">Days Complete</div><div class="dash-val" id="dash-days">—</div><div class="dash-sub" id="dash-days-sub"></div></div>
+    </div>
+    <div class="dash-card">
+      <div class="dash-icon">🚗</div>
+      <div><div class="dash-label">Miles Driven</div><div class="dash-val" id="dash-miles">—</div><div class="dash-sub">est. cumulative</div></div>
+    </div>
+    <div class="dash-card">
+      <div class="dash-icon">✅</div>
+      <div><div class="dash-label">Stops Visited</div><div class="dash-val" id="dash-visited">—</div><div class="dash-sub" id="dash-visited-sub"></div></div>
+    </div>
+  </div>
+
+  <!-- SEA GLASS CHECKLIST -->
+  <div class="checklist-strip">
+    <div class="checklist-title">🔵 Sea Glass Beaches <span id="glass-score">0 / 7</span></div>
+    <div class="check-items" id="glass-checks"></div>
+  </div>
+  <!-- HIKES CHECKLIST -->
+  <div class="checklist-strip">
+    <div class="checklist-title">🥾 Exposed Hikes Done <span id="hike-score">0 / 9</span></div>
+    <div class="check-items" id="hike-checks"></div>
+  </div>
+</div>
+
+<!-- SUMMARY TABLE -->
+<div id="summary">
+  <div class="sec-header">
+    <span class="sec-icon">📋</span>
+    <h2 class="sec-title">Full Trip Overview</h2>
+  </div>
+  <div class="summary-table">
+    <div class="st-row header"><span>Dates</span><span>Location</span><span>Nights</span></div>
+    <div class="st-row"><span class="st-dates">Jul 2–7</span><span class="st-place">Seaside / Cannon Beach, OR</span><span class="st-nights">5</span></div>
+    <div class="st-row"><span class="st-dates">Jul 7–10</span><span class="st-place">Lincoln City, OR</span><span class="st-nights">3</span></div>
+    <div class="st-row"><span class="st-dates">Jul 10–13</span><span class="st-place">Yachats, OR</span><span class="st-nights">3</span></div>
+    <div class="st-row"><span class="st-dates">Jul 13–16</span><span class="st-place">Crescent City, CA (Redwoods)</span><span class="st-nights">3</span></div>
+    <div class="st-row"><span class="st-dates">Jul 16–18</span><span class="st-place">Fort Bragg, CA (Glass Beach)</span><span class="st-nights">2</span></div>
+    <div class="st-row hl"><span class="st-dates">Jul 18–21</span><span class="st-place">⭐ Crater Lake, OR</span><span class="st-nights">3</span></div>
+    <div class="st-row hl"><span class="st-dates">Jul 21–24</span><span class="st-place">⭐ Bend, OR (Smith Rock)</span><span class="st-nights">3</span></div>
+    <div class="st-row"><span class="st-dates">Jul 24</span><span class="st-place">✈️ Drive Portland → Fly home to PA</span><span class="st-nights">—</span></div>
+  </div>
+</div>
+
+<!-- BOOK AHEAD -->
+<div id="bookahead">
+  <div class="book-banner">
+    <h3>⚠️ Book These Now — July Fills Fast</h3>
+    <div class="book-item"><span><strong>Surf Lesson — Moment Surf Co., Pacific City</strong> · Jul 7 · momentsurfcompany.com · Kids 5+ on foam boards</span></div>
+    <div class="book-item"><span><strong>Sandboarding — Sand Master Park, Florence</strong> · Jul 11 · sandmasterpark.com · Book lessons ahead</span></div>
+    <div class="book-item"><span><strong>Crater Lake Lodge / Mazama Village</strong> · Jul 18–21 · explorecraterlake.com · Check cancellations now</span></div>
+    <div class="book-item"><span><strong>Fern Canyon</strong> · Jul 14 · Cash fee ~$10/car · Check nps.gov/redw for permits</span></div>
+  </div>
+</div>
+
+<!-- ══════════════════════ CANNON BEACH ══════════════════════ -->
+<div id="oregon1">
+  <div class="sec-header"><span class="sec-icon">🌊</span><h2 class="sec-title">Oregon — Cannon Beach</h2><span class="sec-pill">Jul 2–7 · 5 nights</span></div>
+  <div class="hotel-card">
+    <div class="hotel-name">🏨 Ashore Hotel</div>
+    <div class="hotel-addr">125 Oceanway Street, Seaside, OR 97138</div>
+    <a class="addr-link" href="https://maps.google.com/?q=125+Oceanway+Street+Seaside+OR+97138" target="_blank">📍 Open in Maps</a>
+    <div class="hotel-meta"><span class="hotel-tag">Check-in Jul 2</span><span class="hotel-tag">Check-out Jul 7</span><span class="hotel-tag">5 nights</span></div>
+  </div>
+
+  <div class="stop-card" id="card-jul2"><div class="stop-header" onclick="toggleCard('card-jul2')"><span class="stop-badge badge-arrive">Arrive</span><div class="stop-info"><div class="stop-date">Thursday, July 2</div><div class="stop-loc">Portland Airport → Seaside, OR</div></div><div class="stop-right"><button class="visited-btn" id="vbtn-jul2" onclick="toggleVisited(event,'jul2')">Mark visited</button><span class="stop-chevron">▼</span></div></div>
+  <div class="stop-body">
+    <div class="detail-row"><span class="dl">Flight</span><span class="dv">Land PDX ~11am local time</span></div>
+    <div class="detail-row"><span class="dl">Plan</span><span class="dv">Rental car pickup → drive ~2.5 hrs to Seaside. Arrive mid-afternoon. Seaside Promenade flat beach walk — perfect for jet-lagged kids.</span></div>
+    <div class="detail-row"><span class="dl">Drive</span><span class="dv">~2.5 hrs PDX → Seaside</span></div>
+    <div class="tips-box"><strong>Tip:</strong> Keep it low-key tonight. The Promenade is a flat easy walk right on the beach. Grab chowder, get to bed early — big days ahead.</div>
+    <div id="mood-jul2"></div><div id="notes-jul2"></div><div id="blog-jul2"></div>
+  </div></div>
+
+  <div class="stop-card" id="card-jul3"><div class="stop-header" onclick="toggleCard('card-jul3')"><span class="stop-badge badge-relax">Slow Day</span><div class="stop-info"><div class="stop-date">Friday, July 3</div><div class="stop-loc">Cannon Beach</div></div><div class="stop-right"><button class="visited-btn" id="vbtn-jul3" onclick="toggleVisited(event,'jul3')">Mark visited</button><span class="stop-chevron">▼</span></div></div>
+  <div class="stop-body">
+    <div class="detail-row"><span class="dl">Vibe</span><span class="dv">Recovery day. Wander Cannon Beach town, browse shops, get ice cream, get your beach legs.</span></div>
+    <div class="detail-row"><span class="dl">Activity</span><span class="dv"><span class="chip">🏖 Cannon Beach</span><span class="chip">🛍 Browse town</span><span class="chip">🍦 Ice cream</span></span></div>
+    <div class="tips-box"><strong>Tide pooling tip:</strong> Check low tide chart for Haystack Rock — purple sea urchins, starfish, anemones. Go at -0.5 ft or lower. One of the best kid activities on the whole coast.</div>
+    <div id="mood-jul3"></div><div id="notes-jul3"></div><div id="blog-jul3"></div>
+  </div></div>
+
+  <div class="stop-card" id="card-jul4"><div class="stop-header" onclick="toggleCard('card-jul4')"><span class="stop-badge badge-special">🎆 4th of July</span><div class="stop-info"><div class="stop-date">Saturday, July 4</div><div class="stop-loc">Cannon Beach Parade + Fireworks</div></div><div class="stop-right"><button class="visited-btn" id="vbtn-jul4" onclick="toggleVisited(event,'jul4')">Mark visited</button><span class="stop-chevron">▼</span></div></div>
+  <div class="stop-body">
+    <div class="detail-row"><span class="dl">Morning</span><span class="dv">Cannon Beach 4th of July Parade — runs through downtown along Hemlock St</span></div>
+    <div class="detail-row"><span class="dl">Afternoon</span><span class="dv"><span class="chip fire">🏖 Beach all day</span></span></div>
+    <div class="detail-row"><span class="dl">Evening</span><span class="dv"><span class="chip fire">🎆 Fireworks over Haystack Rock — 10pm</span></span></div>
+    <div class="tips-box"><strong>Tip:</strong> Claim your beach spot early. Bring layers — Oregon coast nights are genuinely cold even in July. Haystack Rock lit up with fireworks behind it is one of the most beautiful things you'll see all trip.</div>
+    <div id="mood-jul4"></div><div id="notes-jul4"></div><div id="blog-jul4"></div>
+  </div></div>
+
+  <div class="stop-card" id="card-jul5"><div class="stop-header" onclick="toggleCard('card-jul5')"><span class="stop-badge badge-hike">Hike</span><div class="stop-info"><div class="stop-date">Sunday, July 5</div><div class="stop-loc">Ecola State Park</div></div><div class="stop-right"><button class="visited-btn" id="vbtn-jul5" onclick="toggleVisited(event,'jul5')">Mark visited</button><span class="stop-chevron">▼</span></div></div>
+  <div class="stop-body">
+    <div class="detail-row"><span class="dl">Location</span><span class="dv">Ecola State Park, Cannon Beach, OR 97110</span></div>
+    <div class="detail-row"><span class="dl">Hike</span><span class="dv">Clatsop Loop or Indian Beach Trail — exposed clifftop views over sea stacks. Indian Beach has a sheltered cove great for kids after the hike.</span></div>
+    <div class="detail-row"><span class="dl">Drive</span><span class="dv">~15 min from Ashore Hotel · $5/vehicle day-use fee</span></div>
+    <div class="tips-box"><strong>Tip:</strong> Go early before fog burns off — misty clifftops over the Pacific are otherworldly. Keep a close eye on the youngest near cliff edges.</div>
+    <div id="mood-jul5"></div><div id="notes-jul5"></div><div id="blog-jul5"></div>
+  </div></div>
+
+  <div class="stop-card" id="card-jul6"><div class="stop-header" onclick="toggleCard('card-jul6')"><span class="stop-badge badge-beach">Beach</span><div class="stop-info"><div class="stop-date">Monday, July 6</div><div class="stop-loc">Cannon Beach + Manzanita</div></div><div class="stop-right"><button class="visited-btn" id="vbtn-jul6" onclick="toggleVisited(event,'jul6')">Mark visited</button><span class="stop-chevron">▼</span></div></div>
+  <div class="stop-body">
+    <div class="detail-row"><span class="dl">Stop 1</span><span class="dv">Cannon Beach — tide pool at Haystack Rock (check low tide), explore town</span></div>
+    <div class="detail-row"><span class="dl">Stop 2</span><span class="dv">Manzanita Beach — wide flat beach, great for running and kites, less crowded. Also a sea glass beach!</span></div>
+    <div class="detail-row"><span class="dl">Drive</span><span class="dv">~20 min between beaches south on US-101</span></div>
+    <div class="tips-box"><strong>Sea glass tip:</strong> Manzanita northern end near the creek outlet — best pickings at low tide.</div>
+    <div id="mood-jul6"></div><div id="notes-jul6"></div><div id="blog-jul6"></div>
+  </div></div>
+</div>
+
+<!-- ══════════════════════ LINCOLN CITY ══════════════════════ -->
+<div id="lincoln">
+  <div class="sec-header"><span class="sec-icon">🔵</span><h2 class="sec-title">Oregon — Lincoln City</h2><span class="sec-pill">Jul 7–10 · 3 nights</span></div>
+  <div class="hotel-card">
+    <div class="hotel-name">🏨 Looking Glass Inn</div>
+    <div class="hotel-addr">861 Southwest 51st Street, Lincoln City, OR 97367</div>
+    <a class="addr-link" href="https://maps.google.com/?q=861+SW+51st+Street+Lincoln+City+OR+97367" target="_blank">📍 Open in Maps</a>
+    <div class="hotel-meta"><span class="hotel-tag">Check-in Jul 7</span><span class="hotel-tag">Check-out Jul 10</span><span class="hotel-tag">3 nights</span><span class="hotel-tag">🔵 Sea glass &amp; fossils on beach</span></div>
+  </div>
+
+  <div class="stop-card" id="card-jul7"><div class="stop-header" onclick="toggleCard('card-jul7')"><span class="stop-badge badge-travel">Travel Day</span><div class="stop-info"><div class="stop-date">Tuesday, July 7</div><div class="stop-loc">Seaside → Pacific City → Lincoln City</div></div><div class="stop-right"><button class="visited-btn" id="vbtn-jul7" onclick="toggleVisited(event,'jul7')">Mark visited</button><span class="stop-chevron">▼</span></div></div>
+  <div class="stop-body">
+    <div class="detail-row"><span class="dl">Stop 1</span><span class="dv"><strong>🏄 Surf Lesson — Moment Surf Company</strong><br>33280 Cape Kiwanda Dr, Pacific City, OR 97135 · 3-hour lesson · Kids 5+ on foam boards · Must book ahead!</span></div>
+    <a class="addr-link" href="https://maps.google.com/?q=33280+Cape+Kiwanda+Dr+Pacific+City+OR" target="_blank">📍 Open in Maps</a>
+    <div class="detail-row"><span class="dl">Drive 1</span><span class="dv">Seaside → Pacific City: ~1 hr 45 min</span></div>
+    <div class="detail-row"><span class="dl">Drive 2</span><span class="dv">Pacific City → Looking Glass Inn: ~40 min</span></div>
+    <div class="tips-box"><strong>Tip:</strong> Cape Kiwanda next to Moment Surf Co. has dramatic sandstone headlands — worth 30 mins after your lesson. Watch for the Pacific City Dory Fleet launching off the beach — unique to this spot.</div>
+    <div id="mood-jul7"></div><div id="notes-jul7"></div><div id="blog-jul7"></div>
+  </div></div>
+
+  <div class="stop-card" id="card-jul8"><div class="stop-header" onclick="toggleCard('card-jul8')"><span class="stop-badge badge-hike">Hike</span><div class="stop-info"><div class="stop-date">Wednesday, July 8</div><div class="stop-loc">Devils Punch Bowl + Seal Rock</div></div><div class="stop-right"><button class="visited-btn" id="vbtn-jul8" onclick="toggleVisited(event,'jul8')">Mark visited</button><span class="stop-chevron">▼</span></div></div>
+  <div class="stop-body">
+    <div class="detail-row"><span class="dl">Stop 1</span><span class="dv"><strong>Devils Punch Bowl</strong> — collapsed sea cave that churns like a cauldron at high tide. Dramatic. Go at high tide for full effect.</span></div>
+    <div class="detail-row"><span class="dl">Stop 2</span><span class="dv"><strong>Seal Rock State Recreation Site</strong> — great tide pools, sometimes actual seals on rocks. Good sea glass too.</span></div>
+    <div class="detail-row"><span class="dl">Drive</span><span class="dv">~30 min south of Looking Glass Inn on US-101</span></div>
+    <div class="tips-box"><strong>Tide tip:</strong> Devils Punch Bowl = high tide. Seal Rock tide pools = low tide. Check tideschart.com and plan your order accordingly.</div>
+    <div id="mood-jul8"></div><div id="notes-jul8"></div><div id="blog-jul8"></div>
+  </div></div>
+
+  <div class="stop-card" id="card-jul9"><div class="stop-header" onclick="toggleCard('card-jul9')"><span class="stop-badge badge-beach">Sea Glass</span><div class="stop-info"><div class="stop-date">Thursday, July 9</div><div class="stop-loc">Otter Rock + Moolack Beach</div></div><div class="stop-right"><button class="visited-btn" id="vbtn-jul9" onclick="toggleVisited(event,'jul9')">Mark visited</button><span class="stop-chevron">▼</span></div></div>
+  <div class="stop-body">
+    <div class="detail-row"><span class="dl">Stop 1</span><span class="dv"><strong>Otter Rock</strong> — small cove, excellent glass hunting and beautiful views</span></div>
+    <div class="detail-row"><span class="dl">Stop 2</span><span class="dv"><strong>Moolack Beach</strong> — one of the best sea glass beaches on the Oregon coast. Walk the northern end near the old landfill area. Go early.</span></div>
+    <div class="detail-row"><span class="dl">Bonus</span><span class="dv">Ask hotel about Lincoln City's "Finders Keepers" program — city hides hand-blown glass floats on the beach year-round!</span></div>
+    <div class="tips-box"><strong>Pro tip:</strong> Lowest tides = most glass. Check tideschart.com for Newport OR. Overcast mornings reduce glare — actually ideal for spotting glass.</div>
+    <div id="mood-jul9"></div><div id="notes-jul9"></div><div id="blog-jul9"></div>
+  </div></div>
+</div>
+
+<!-- ══════════════════════ YACHATS ══════════════════════ -->
+<div id="yachats">
+  <div class="sec-header"><span class="sec-icon">🌲</span><h2 class="sec-title">Oregon — Yachats</h2><span class="sec-pill">Jul 10–13 · 3 nights</span></div>
+  <div class="hotel-card">
+    <div class="hotel-name">🏨 Overleaf Lodge &amp; Spa</div>
+    <div class="hotel-addr">280 Overleaf Lodge Lane, Yachats, OR 97498</div>
+    <a class="addr-link" href="https://maps.google.com/?q=280+Overleaf+Lodge+Lane+Yachats+OR+97498" target="_blank">📍 Open in Maps</a>
+    <div class="hotel-meta"><span class="hotel-tag">Check-in Jul 10</span><span class="hotel-tag">Check-out Jul 13</span><span class="hotel-tag">3 nights</span><span class="hotel-tag">Drive: ~1h 10m from Lincoln City</span></div>
+  </div>
+
+  <div class="stop-card" id="card-jul10"><div class="stop-header" onclick="toggleCard('card-jul10')"><span class="stop-badge badge-travel">Travel Day</span><div class="stop-info"><div class="stop-date">Friday, July 10</div><div class="stop-loc">Lincoln City → Yachats</div></div><div class="stop-right"><button class="visited-btn" id="vbtn-jul10" onclick="toggleVisited(event,'jul10')">Mark visited</button><span class="stop-chevron">▼</span></div></div>
+  <div class="stop-body">
+    <div class="detail-row"><span class="dl">Drive</span><span class="dv">~1 hr 10 min south on US-101 — scenic coastal highway. Pull over at Fogarty Creek State Recreation Area for a quick beach stop.</span></div>
+    <div class="detail-row"><span class="dl">Arrive</span><span class="dv">Overleaf Lodge sits right on the rocky Yachats coast — rooms have ocean views. Walk the Yachats 804 Trail right from the hotel.</span></div>
+    <div id="mood-jul10"></div><div id="notes-jul10"></div><div id="blog-jul10"></div>
+  </div></div>
+
+  <div class="stop-card" id="card-jul11"><div class="stop-header" onclick="toggleCard('card-jul11')"><span class="stop-badge badge-special">Big Day</span><div class="stop-info"><div class="stop-date">Saturday, July 11</div><div class="stop-loc">Sandboarding + Thor's Well + Cape Perpetua</div></div><div class="stop-right"><button class="visited-btn" id="vbtn-jul11" onclick="toggleVisited(event,'jul11')">Mark visited</button><span class="stop-chevron">▼</span></div></div>
+  <div class="stop-body">
+    <div class="detail-row"><span class="dl">Morning</span><span class="dv"><strong>🏂 Sand Master Park</strong><br>4981 US-101, Florence, OR 97439 · ~20 min north · World's first sandboard park · 200 acres of dunes · Sleds for littles, boards for older kids · <strong>Book lessons ahead!</strong></span></div>
+    <a class="addr-link" href="https://maps.google.com/?q=4981+US-101+Florence+OR+97439" target="_blank">📍 Open in Maps</a>
+    <div class="detail-row"><span class="dl">Afternoon</span><span class="dv"><strong>💧 Thor's Well</strong> — Cape Perpetua Scenic Area. Go at high tide. Hold hands with the littles — water surges fast and unpredictably. Absolutely otherworldly.</span></div>
+    <div class="detail-row"><span class="dl">Also</span><span class="dv"><span class="chip">🌊 Cape Perpetua Trail</span><span class="chip">💦 Sweet Creek Falls</span><span class="chip">🏠 Heceta Head Lighthouse</span></span></div>
+    <div class="tips-box"><strong>For you:</strong> Cape Perpetua trail is exposed clifftop hiking above the ocean with scrambling. One of the best exposed hikes on the coast — do it while kids rest if energy allows.</div>
+    <div id="mood-jul11"></div><div id="notes-jul11"></div><div id="blog-jul11"></div>
+  </div></div>
+
+  <div class="stop-card" id="card-jul12"><div class="stop-header" onclick="toggleCard('card-jul12')"><span class="stop-badge badge-wild">Wildlife</span><div class="stop-info"><div class="stop-date">Sunday, July 12</div><div class="stop-loc">Sea Lion Cave</div></div><div class="stop-right"><button class="visited-btn" id="vbtn-jul12" onclick="toggleVisited(event,'jul12')">Mark visited</button><span class="stop-chevron">▼</span></div></div>
+  <div class="stop-body">
+    <div class="detail-row"><span class="dl">Location</span><span class="dv">91560 US-101, Florence, OR 97439 · ~20 min north of Yachats</span></div>
+    <a class="addr-link" href="https://maps.google.com/?q=91560+US-101+Florence+OR+97439" target="_blank">📍 Open in Maps</a>
+    <div class="detail-row"><span class="dl">What</span><span class="dv">America's largest sea cave — 12 stories tall, football field wide. Elevator 300 ft down a cliff. In July sea lions are on outer cliffs, but you'll see and hear them. Absolutely not a tourist trap.</span></div>
+    <div class="detail-row"><span class="dl">Note</span><span class="dv"><span class="chip warn">⚠️ 37 steps + sloped trail before elevator — no strollers</span><br>Bring a light jacket — the cave is cold year-round</span></div>
+    <div id="mood-jul12"></div><div id="notes-jul12"></div><div id="blog-jul12"></div>
+  </div></div>
+</div>
+
+<!-- ══════════════════════ CALIFORNIA / REDWOODS ══════════════════════ -->
+<div id="california">
+  <div class="sec-header"><span class="sec-icon">🌁</span><h2 class="sec-title">California — Redwoods</h2><span class="sec-pill ca">Jul 13–16 · 3 nights</span></div>
+  <div class="hotel-card ca">
+    <div class="hotel-name">🏨 Crescent City, CA — Book TBD</div>
+    <div class="hotel-addr">Stay near Jedediah Smith Redwoods State Park</div>
+    <div class="hotel-meta"><span class="hotel-tag">Check-in Jul 13</span><span class="hotel-tag">Check-out Jul 16</span><span class="hotel-tag">3 nights</span><span class="hotel-tag book">⚠️ Book now</span></div>
+  </div>
+
+  <div class="stop-card" id="card-jul13"><div class="stop-header" onclick="toggleCard('card-jul13')"><span class="stop-badge badge-travel">Travel Day</span><div class="stop-info"><div class="stop-date">Sunday, July 13</div><div class="stop-loc">Yachats → Crescent City, CA</div></div><div class="stop-right"><button class="visited-btn" id="vbtn-jul13" onclick="toggleVisited(event,'jul13')">Mark visited</button><span class="stop-chevron">▼</span></div></div>
+  <div class="stop-body">
+    <div class="detail-row"><span class="dl">Drive</span><span class="dv">~4 hrs south on US-101 — scenic coastal highway the whole way</span></div>
+    <div class="detail-row"><span class="dl">En Route</span><span class="dv"><strong>Samuel H. Boardman Scenic Corridor</strong> — between Brookings and Gold Beach, OR. Stop at <strong>Natural Bridges viewpoint</strong> — stunning sea arches. Multiple pullouts along 12 miles. Allow 1.5 hrs just for stops here.</span></div>
+    <div class="tips-box"><strong>Tip:</strong> The Boardman Corridor is one of the most underrated drives on the entire West Coast. Don't rush it — kids love the sea arch viewpoints.</div>
+    <div id="mood-jul13"></div><div id="notes-jul13"></div><div id="blog-jul13"></div>
+  </div></div>
+
+  <div class="stop-card" id="card-jul14"><div class="stop-header" onclick="toggleCard('card-jul14')"><span class="stop-badge badge-hike">Redwoods</span><div class="stop-info"><div class="stop-date">Monday, July 14</div><div class="stop-loc">Grove of Titans + Stout Grove</div></div><div class="stop-right"><button class="visited-btn" id="vbtn-jul14" onclick="toggleVisited(event,'jul14')">Mark visited</button><span class="stop-chevron">▼</span></div></div>
+  <div class="stop-body">
+    <div class="detail-row"><span class="dl">Stop 1</span><span class="dv"><strong>Grove of Titans</strong> — Mill Creek Trailhead, Howland Hill Rd, Crescent City, CA<br>1.8-mile easy trail. Raised iron walkway through ancient giants including Lost Monarch — 320 ft tall. Go early morning before crowds.</span></div>
+    <a class="addr-link" href="https://maps.google.com/?q=Mill+Creek+Trailhead+Howland+Hill+Road+Crescent+City+CA" target="_blank">📍 Open in Maps</a>
+    <div class="detail-row"><span class="dl">Stop 2</span><span class="dv"><strong>Stout Grove</strong> — Jedediah Smith Redwoods, ~10 min away. Short easy loop through pristine old-growth. Do both in one morning.</span></div>
+    <div class="tips-box"><strong>Tip:</strong> Drive Howland Hill Rd — narrow gravel but spectacular. From Oregon, Stout Grove comes first — do it, then Grove of Titans. Both take ~3 hrs with kids.</div>
+    <div id="mood-jul14"></div><div id="notes-jul14"></div><div id="blog-jul14"></div>
+  </div></div>
+
+  <div class="stop-card" id="card-jul15"><div class="stop-header" onclick="toggleCard('card-jul15')"><span class="stop-badge badge-hike">Fern Canyon</span><div class="stop-info"><div class="stop-date">Tuesday, July 15</div><div class="stop-loc">Fern Canyon + Prairie Creek</div></div><div class="stop-right"><button class="visited-btn" id="vbtn-jul15" onclick="toggleVisited(event,'jul15')">Mark visited</button><span class="stop-chevron">▼</span></div></div>
+  <div class="stop-body">
+    <div class="detail-row"><span class="dl">Location</span><span class="dv">Prairie Creek Redwoods State Park, ~50 min south of Crescent City</span></div>
+    <div class="detail-row"><span class="dl">What</span><span class="dv">50-ft walls of ferns, stream crossings, Jurassic Park vibes. ~1-mile loop. Kids absolutely love it.</span></div>
+    <div class="detail-row"><span class="dl">Important</span><span class="dv"><span class="chip warn">⚠️ Davison Rd: 6 miles rough gravel, goes through stream crossings</span><br><span class="chip warn">⚠️ Bring cash ~$10/car · Check nps.gov/redw for permits</span></span></div>
+    <div class="detail-row"><span class="dl">Footwear</span><span class="dv">Water sandals or shoes you're ok getting wet — stream crossings on the trail. Worth every inconvenience.</span></div>
+    <div id="mood-jul15"></div><div id="notes-jul15"></div><div id="blog-jul15"></div>
+  </div></div>
+</div>
+
+<!-- ══════════════════════ FORT BRAGG ══════════════════════ -->
+<div id="fortbragg">
+  <div class="sec-header"><span class="sec-icon">💎</span><h2 class="sec-title">California — Fort Bragg</h2><span class="sec-pill ca">Jul 16–18 · 2 nights</span></div>
+  <div class="hotel-card ca">
+    <div class="hotel-name">🏨 Fort Bragg / Mendocino, CA — Book TBD</div>
+    <div class="hotel-addr">Fort Bragg or Mendocino coast area, CA</div>
+    <div class="hotel-meta"><span class="hotel-tag">Check-in Jul 16</span><span class="hotel-tag">Check-out Jul 18</span><span class="hotel-tag">2 nights</span><span class="hotel-tag book">⚠️ Book now</span></div>
+  </div>
+
+  <div class="stop-card" id="card-jul16"><div class="stop-header" onclick="toggleCard('card-jul16')"><span class="stop-badge badge-travel">Travel Day</span><div class="stop-info"><div class="stop-date">Wednesday, July 16</div><div class="stop-loc">Crescent City → Fort Bragg</div></div><div class="stop-right"><button class="visited-btn" id="vbtn-jul16" onclick="toggleVisited(event,'jul16')">Mark visited</button><span class="stop-chevron">▼</span></div></div>
+  <div class="stop-body">
+    <div class="detail-row"><span class="dl">Drive</span><span class="dv">~3.5 hrs south on US-101 / CA-1</span></div>
+    <div class="detail-row"><span class="dl">En Route</span><span class="dv"><strong>Avenue of the Giants</strong> — CA-254 through Humboldt Redwoods SP. Towering old-growth over the road, dappled light. Stop at Founders Grove, 10-min walk. One of the most magical drives you can do with kids.</span></div>
+    <div class="tips-box"><strong>Tip:</strong> Grab sandwiches before you leave Crescent City — food options thin out along this stretch.</div>
+    <div id="mood-jul16"></div><div id="notes-jul16"></div><div id="blog-jul16"></div>
+  </div></div>
+
+  <div class="stop-card" id="card-jul17"><div class="stop-header" onclick="toggleCard('card-jul17')"><span class="stop-badge badge-beach">Arrive</span><div class="stop-info"><div class="stop-date">Thursday, July 17</div><div class="stop-loc">Fort Bragg — settle in + first look</div></div><div class="stop-right"><button class="visited-btn" id="vbtn-jul17" onclick="toggleVisited(event,'jul17')">Mark visited</button><span class="stop-chevron">▼</span></div></div>
+  <div class="stop-body">
+    <div class="detail-row"><span class="dl">Plan</span><span class="dv">Arrive mid-day. Check in. Walk Glass Beach for an afternoon preview. Explore Fort Bragg's small downtown.</span></div>
+    <div class="detail-row"><span class="dl">Evening</span><span class="dv">Day trip to <strong>Mendocino town</strong> — 10 min south. Stunning headlands walk, excellent dinner spots, beautiful Victorian town.</span></div>
+    <div id="mood-jul17"></div><div id="notes-jul17"></div><div id="blog-jul17"></div>
+  </div></div>
+
+  <div class="stop-card" id="card-jul18"><div class="stop-header" onclick="toggleCard('card-jul18')"><span class="stop-badge badge-beach">Sea Glass!</span><div class="stop-info"><div class="stop-date">Friday, July 18</div><div class="stop-loc">Glass Beach → Crater Lake</div></div><div class="stop-right"><button class="visited-btn" id="vbtn-jul18" onclick="toggleVisited(event,'jul18')">Mark visited</button><span class="stop-chevron">▼</span></div></div>
+  <div class="stop-body">
+    <div class="detail-row"><span class="dl">Morning</span><span class="dv"><strong>🔵 Glass Beach</strong> — go at low tide, first thing. #1 sea glass beach on the whole trip. Smoothed colorful glass right on the beach. Kids will fill their pockets.</span></div>
+    <a class="addr-link" href="https://maps.google.com/?q=Glass+Beach+Fort+Bragg+CA" target="_blank">📍 Open in Maps</a>
+    <div class="detail-row"><span class="dl">Afternoon</span><span class="dv">Drive to Crater Lake area — ~4.5 hrs north via US-101 → US-199 → OR-62</span></div>
+    <div class="detail-row"><span class="dl">En Route</span><span class="dv">Optional: Oregon Caves National Monument (~30 min detour off US-199) — guided cave tour, cool temps, kids love it.</span></div>
+    <div class="tips-box"><strong>Tip:</strong> Check tide charts the night before and plan Glass Beach for the lowest tide of the morning. This is your one good shot at it.</div>
+    <div id="mood-jul18"></div><div id="notes-jul18"></div><div id="blog-jul18"></div>
+  </div></div>
+</div>
+
+<!-- ══════════════════════ CRATER LAKE ══════════════════════ -->
+<div id="craterlake">
+  <div class="sec-header"><span class="sec-icon">🌋</span><h2 class="sec-title">Crater Lake</h2><span class="sec-pill special">Jul 18–21 · 3 nights</span></div>
+  <div class="hotel-card special"><div class="hotel-name">🏨 Option A: Crater Lake Lodge ⭐</div><div class="hotel-addr">Crater Lake National Park, Rim Village, OR 97604</div><a class="addr-link" href="https://explorecraterlake.com" target="_blank">🔗 explorecraterlake.com</a><div class="hotel-meta"><span class="hotel-tag book">⚠️ Very hard to get in July — check for cancellations</span></div></div>
+  <div class="hotel-card special"><div class="hotel-name">🏨 Option B: Mazama Village Cabins</div><div class="hotel-addr">Inside Crater Lake NP, ~7 miles from rim · More availability than Lodge</div><div class="hotel-meta"><span class="hotel-tag book">⚠️ Also books out — check explorecraterlake.com</span></div></div>
+  <div class="hotel-card special"><div class="hotel-name">🏨 Option C: Klamath Falls (backup)</div><div class="hotel-addr">Klamath Falls, OR — ~1 hour from park entrance. Wide hotel selection.</div><div class="hotel-meta"><span class="hotel-tag">Easy backup</span><span class="hotel-tag">~1 hr to park</span></div></div>
+
+  <div class="stop-card" id="card-jul19"><div class="stop-header" onclick="toggleCard('card-jul19')"><span class="stop-badge badge-special">🌋 Crater Lake</span><div class="stop-info"><div class="stop-date">Saturday, July 19</div><div class="stop-loc">Rim Drive + South Rim Trails</div></div><div class="stop-right"><button class="visited-btn" id="vbtn-jul19" onclick="toggleVisited(event,'jul19')">Mark visited</button><span class="stop-chevron">▼</span></div></div>
+  <div class="stop-body">
+    <div class="detail-row"><span class="dl">Main Event</span><span class="dv"><strong>Crater Lake Rim Drive</strong> — 33-mile loop. The lake is 1,943 ft deep and a blue that doesn't look real. Arrive at the rim early — entrance lines form by 11am in July.</span></div>
+    <div class="detail-row"><span class="dl">Must Stop</span><span class="dv"><strong>Sinnott Memorial Overlook</strong> at Rim Village — touch-the-relief-map, geological history, eastern lake view. Pick up Junior Ranger booklets here!</span></div>
+    <div class="detail-row"><span class="dl">Hikes</span><span class="dv"><span class="chip">🌸 Castle Crest Wildflower Loop (0.4 mi)</span><span class="chip">🌊 Sun Notch (0.5 mi, Phantom Ship views)</span><span class="chip">💧 Plaikni Falls (2 mi, easy)</span></span></div>
+    <div class="detail-row"><span class="dl">Fee</span><span class="dv">$35/vehicle · Or America the Beautiful Annual Pass $80</span></div>
+    <div class="detail-row"><span class="dl">Note</span><span class="dv"><span class="chip warn">⚠️ Cleetwood Cove Trail + boat tours closed through ~2028</span></span></div>
+    <div class="tips-box"><strong>Tip:</strong> Bring real layers — genuinely cold at the rim even in late July. Keep youngest back from cliff edges — barriers are low. The blue of this lake will stop everyone mid-sentence.</div>
+    <div id="mood-jul19"></div><div id="notes-jul19"></div><div id="blog-jul19"></div>
+  </div></div>
+
+  <div class="stop-card" id="card-jul20"><div class="stop-header" onclick="toggleCard('card-jul20')"><span class="stop-badge badge-special">🌋 Crater Lake</span><div class="stop-info"><div class="stop-date">Sunday, July 20</div><div class="stop-loc">North Rim + Watchman Peak</div></div><div class="stop-right"><button class="visited-btn" id="vbtn-jul20" onclick="toggleVisited(event,'jul20')">Mark visited</button><span class="stop-chevron">▼</span></div></div>
+  <div class="stop-body">
+    <div class="detail-row"><span class="dl">Today</span><span class="dv">Deeper exploration day. North Rim typically opens mid-July — drive it for a completely different perspective.</span></div>
+    <div class="detail-row"><span class="dl">Best Hike</span><span class="dv"><strong>Watchman Peak Trail</strong> — 1.4 mi, 420 ft gain. Summit lookout tower, 360° views of entire caldera and Cascades. The exposed hike of Crater Lake. Doable for kids 7+.</span></div>
+    <div class="detail-row"><span class="dl">Also</span><span class="dv"><span class="chip">🌋 Pumice Desert roadside stop</span><span class="chip">🌲 Annie Creek Canyon (1.7 mi loop, shaded gorge)</span></span></div>
+    <div class="detail-row"><span class="dl">Evening</span><span class="dv">Dinner at Crater Lake Lodge dining room if staying there — book reservations. Or Mazama Village for casual.</span></div>
+    <div id="mood-jul20"></div><div id="notes-jul20"></div><div id="blog-jul20"></div>
+  </div></div>
+
+  <div class="stop-card" id="card-jul21"><div class="stop-header" onclick="toggleCard('card-jul21')"><span class="stop-badge badge-travel">→ Bend</span><div class="stop-info"><div class="stop-date">Monday, July 21</div><div class="stop-loc">Crater Lake → Bend</div></div><div class="stop-right"><button class="visited-btn" id="vbtn-jul21" onclick="toggleVisited(event,'jul21')">Mark visited</button><span class="stop-chevron">▼</span></div></div>
+  <div class="stop-body">
+    <div class="detail-row"><span class="dl">Drive</span><span class="dv">~1.5 hrs north on OR-97. One of the easiest drives of the whole trip. Arrive in Bend by noon.</span></div>
+    <div class="detail-row"><span class="dl">En Route</span><span class="dv">Optional: <strong>Newberry National Volcanic Monument</strong> (~20 min south of Bend) — lava tubes, obsidian flow, Big Obsidian Flow trail. Otherworldly. Kids love the lava tubes.</span></div>
+    <div class="detail-row"><span class="dl">Arrive</span><span class="dv">Check into Bend hotel. Afternoon walk on the Deschutes River Trail. Great downtown food scene.</span></div>
+    <div id="mood-jul21"></div><div id="notes-jul21"></div><div id="blog-jul21"></div>
+  </div></div>
+</div>
+
+<!-- ══════════════════════ BEND ══════════════════════ -->
+<div id="bend">
+  <div class="sec-header"><span class="sec-icon">🧗</span><h2 class="sec-title">Bend + Smith Rock</h2><span class="sec-pill special">Jul 21–24 · 3 nights</span></div>
+  <div class="hotel-card special">
+    <div class="hotel-name">🏨 Bend, OR — Book TBD</div>
+    <div class="hotel-addr">Downtown Bend or Old Mill District, OR — many family options on the Deschutes River</div>
+    <div class="hotel-meta"><span class="hotel-tag">Check-in Jul 21</span><span class="hotel-tag">Check-out Jul 24 morning</span><span class="hotel-tag">3 nights</span><span class="hotel-tag book">⚠️ Book now</span></div>
+  </div>
+
+  <div class="stop-card" id="card-jul22"><div class="stop-header" onclick="toggleCard('card-jul22')"><span class="stop-badge badge-climb">🧗 Smith Rock</span><div class="stop-info"><div class="stop-date">Tuesday, July 22</div><div class="stop-loc">Smith Rock State Park</div></div><div class="stop-right"><button class="visited-btn" id="vbtn-jul22" onclick="toggleVisited(event,'jul22')">Mark visited</button><span class="stop-chevron">▼</span></div></div>
+  <div class="stop-body">
+    <div class="detail-row"><span class="dl">Location</span><span class="dv">9241 NE Crooked River Dr, Terrebonne, OR 97760 · ~30 min north of Bend</span></div>
+    <a class="addr-link" href="https://maps.google.com/?q=Smith+Rock+State+Park+Terrebonne+OR" target="_blank">📍 Open in Maps</a>
+    <div class="detail-row"><span class="dl">Misery Ridge</span><span class="dv"><strong>Misery Ridge Trail</strong> — 4.4-mile loop, 925 ft gain, completely exposed, no shade. Steep staircases, big switchbacks, jaw-dropping views. Best exposed hike on this entire trip. Start by <strong>7am</strong> — hits 100°F+ by midday.</span></div>
+    <div class="detail-row"><span class="dl">For Kids</span><span class="dv"><strong>River Trail</strong> — flat 2.5-mile path along the Crooked River. Shaded in spots, great for watching climbers on the walls above.</span></div>
+    <div class="detail-row"><span class="dl">Climbing</span><span class="dv">Over 1,800 routes. Bring your own gear or rent in Bend. Monkey Face (350-ft tuff spire) is right on the Misery Ridge loop — kids can watch from the trail below.</span></div>
+    <div class="detail-row"><span class="dl">Fee</span><span class="dv">$10–12/vehicle · oregonstateparks.org</span></div>
+    <div class="detail-row"><span class="dl">Watch Out</span><span class="dv"><span class="chip warn">⚠️ Rattlesnakes common near river and rocks in summer</span><br><span class="chip warn">⚠️ Zero shade on Misery Ridge — start early, bring lots of water</span></span></div>
+    <div class="tips-box"><strong>Climber tip:</strong> You'll walk past the base of Monkey Face on the loop — seeing climbers on the wall with the kids watching is a genuinely memorable moment. Bend has a world-class climbing community. You'll want to come back without the kids someday.</div>
+    <div id="mood-jul22"></div><div id="notes-jul22"></div><div id="blog-jul22"></div>
+  </div></div>
+
+  <div class="stop-card" id="card-jul23"><div class="stop-header" onclick="toggleCard('card-jul23')"><span class="stop-badge badge-relax">Bend Day</span><div class="stop-info"><div class="stop-date">Wednesday, July 23</div><div class="stop-loc">Deschutes Float + Town</div></div><div class="stop-right"><button class="visited-btn" id="vbtn-jul23" onclick="toggleVisited(event,'jul23')">Mark visited</button><span class="stop-chevron">▼</span></div></div>
+  <div class="stop-body">
+    <div class="detail-row"><span class="dl">River</span><span class="dv"><strong>Float the Deschutes River</strong> — rent inner tubes at Tumalo Creek Kayak &amp; Canoe or Sun Country Tours. The Bend Whitewater Park float is a local classic for all ages.</span></div>
+    <div class="detail-row"><span class="dl">Hike</span><span class="dv"><strong>Tumalo Falls</strong> — 97-ft waterfall, 5 min drive from downtown. Easy 10-min walk to base. Beautiful and easy for all ages.</span></div>
+    <div class="detail-row"><span class="dl">Town</span><span class="dv">Old Mill District — restaurants, ice cream, shops right on the river. Drake Park along Mirror Pond for a lovely evening walk.</span></div>
+    <div class="detail-row"><span class="dl">Climbing</span><span class="dv">Bend Rock Gym — 15 auto-belays, air-conditioned. Great afternoon option if it's too hot outside.</span></div>
+    <div id="mood-jul23"></div><div id="notes-jul23"></div><div id="blog-jul23"></div>
+  </div></div>
+
+  <div class="stop-card" id="card-jul24"><div class="stop-header" onclick="toggleCard('card-jul24')"><span class="stop-badge badge-travel">Fly Home ✈️</span><div class="stop-info"><div class="stop-date">Thursday, July 24</div><div class="stop-loc">Bend → Portland → PA</div></div><div class="stop-right"><button class="visited-btn" id="vbtn-jul24" onclick="toggleVisited(event,'jul24')">Mark visited</button><span class="stop-chevron">▼</span></div></div>
+  <div class="stop-body">
+    <div class="detail-row"><span class="dl">Drive</span><span class="dv">~3 hrs Bend → Portland via US-97 N → US-26 W. Leave early enough for your flight.</span></div>
+    <div class="detail-row"><span class="dl">En Route</span><span class="dv">Optional: <strong>Timberline Lodge on Mt. Hood</strong> — 30-min detour off US-26. Kids touch actual snow on a volcano in July. Only worth it with a late afternoon flight.</span></div>
+    <div class="detail-row"><span class="dl">✈️</span><span class="dv">Return rental car at PDX. Fly home to PA. You made it!</span></div>
+    <div id="mood-jul24"></div><div id="notes-jul24"></div><div id="blog-jul24"></div>
+  </div></div>
+</div>
+
+<!-- ══════════════════════ REFERENCE ══════════════════════ -->
+<div id="seaglass" style="margin-top:1.8rem">
+  <div class="sec-header"><span class="sec-icon">💎</span><h2 class="sec-title">Best Sea Glass Beaches</h2></div>
+  <div class="ranked-list">
+    <div class="ranked-item"><span class="rank-n">01</span>Glass Beach — Fort Bragg, CA <em style="font-size:.7rem;color:var(--muted);margin-left:.3rem">Best of the trip</em></div>
+    <div class="ranked-item"><span class="rank-n">02</span>Moolack Beach — Newport, OR</div>
+    <div class="ranked-item"><span class="rank-n">03</span>Agate Beach — Newport, OR</div>
+    <div class="ranked-item"><span class="rank-n">04</span>Seal Rock — OR</div>
+    <div class="ranked-item"><span class="rank-n">05</span>Whaleshead Beach — Boardman Corridor, OR</div>
+    <div class="ranked-item"><span class="rank-n">06</span>Bullards Beach — Bandon, OR</div>
+    <div class="ranked-item"><span class="rank-n">07</span>Manzanita Beach — OR</div>
+  </div>
+</div>
+
+<div id="hikes" style="margin-top:1.8rem">
+  <div class="sec-header"><span class="sec-icon">🥾</span><h2 class="sec-title">Best Exposed Hikes</h2></div>
+  <div class="ranked-list">
+    <div class="ranked-item"><span class="rank-n">01</span>Misery Ridge — Smith Rock SP, OR <em style="font-size:.7rem;color:var(--muted);margin-left:.3rem">Your move</em></div>
+    <div class="ranked-item"><span class="rank-n">02</span>Watchman Peak — Crater Lake, OR</div>
+    <div class="ranked-item"><span class="rank-n">03</span>Indian Sands Trail — Boardman Corridor, OR</div>
+    <div class="ranked-item"><span class="rank-n">04</span>Neahkahnie Mountain — Manzanita, OR</div>
+    <div class="ranked-item"><span class="rank-n">05</span>Cape Perpetua Trail — Yachats, OR</div>
+    <div class="ranked-item"><span class="rank-n">06</span>Blacklock Point Trail — OR</div>
+    <div class="ranked-item"><span class="rank-n">07</span>Ecola State Park Cliffs — Cannon Beach, OR</div>
+    <div class="ranked-item"><span class="rank-n">08</span>Fern Canyon — Prairie Creek, CA</div>
+    <div class="ranked-item"><span class="rank-n">09</span>Stout Grove — Jedediah Smith, CA</div>
+  </div>
+</div>
+
+<div id="hotels" style="margin-top:1.8rem">
+  <div class="sec-header"><span class="sec-icon">🏨</span><h2 class="sec-title">All Hotels</h2></div>
+  <div class="hotel-card"><div class="hotel-name">Ashore Hotel</div><div class="hotel-addr">125 Oceanway Street, Seaside, OR 97138</div><a class="addr-link" href="https://maps.google.com/?q=125+Oceanway+Street+Seaside+OR" target="_blank">📍 Maps</a><div class="hotel-meta"><span class="hotel-tag">Jul 2–7 · 5 nights</span></div></div>
+  <div class="hotel-card"><div class="hotel-name">Looking Glass Inn</div><div class="hotel-addr">861 Southwest 51st Street, Lincoln City, OR 97367</div><a class="addr-link" href="https://maps.google.com/?q=861+SW+51st+Street+Lincoln+City+OR" target="_blank">📍 Maps</a><div class="hotel-meta"><span class="hotel-tag">Jul 7–10 · 3 nights</span><span class="hotel-tag">🔵 Sea glass &amp; fossils</span></div></div>
+  <div class="hotel-card"><div class="hotel-name">Overleaf Lodge &amp; Spa</div><div class="hotel-addr">280 Overleaf Lodge Lane, Yachats, OR 97498</div><a class="addr-link" href="https://maps.google.com/?q=280+Overleaf+Lodge+Lane+Yachats+OR" target="_blank">📍 Maps</a><div class="hotel-meta"><span class="hotel-tag">Jul 10–13 · 3 nights</span></div></div>
+  <div class="hotel-card ca"><div class="hotel-name">Crescent City, CA — TBD</div><div class="hotel-addr">Near Jedediah Smith Redwoods</div><div class="hotel-meta"><span class="hotel-tag">Jul 13–16 · 3 nights</span><span class="hotel-tag book">⚠️ Book now</span></div></div>
+  <div class="hotel-card ca"><div class="hotel-name">Fort Bragg / Mendocino, CA — TBD</div><div class="hotel-addr">Fort Bragg or Mendocino coast, CA</div><div class="hotel-meta"><span class="hotel-tag">Jul 16–18 · 2 nights</span><span class="hotel-tag book">⚠️ Book now</span></div></div>
+  <div class="hotel-card special"><div class="hotel-name">Crater Lake Lodge / Mazama Village / Klamath Falls</div><div class="hotel-addr">Crater Lake National Park, OR</div><a class="addr-link" href="https://explorecraterlake.com" target="_blank">🔗 explorecraterlake.com</a><div class="hotel-meta"><span class="hotel-tag">Jul 18–21 · 3 nights</span><span class="hotel-tag book">⚠️ Check cancellations NOW</span></div></div>
+  <div class="hotel-card special"><div class="hotel-name">Bend, OR — TBD</div><div class="hotel-addr">Downtown Bend or Old Mill District, OR</div><div class="hotel-meta"><span class="hotel-tag">Jul 21–24 · 3 nights</span><span class="hotel-tag book">⚠️ Book now</span></div></div>
+  <div class="hotel-card"><div class="hotel-name">Portland Airport area (last night)</div><div class="hotel-addr">Near PDX Airport, Portland, OR</div><div class="hotel-meta"><span class="hotel-tag">Jul 23 · 1 night</span></div></div>
+</div>
+
+</main>
+
+<script>
+// ══════════════════════════════════════════
+// DATA
+// ══════════════════════════════════════════
+const STOPS = [
+  {id:'jul2', date:'2025-07-02', label:'Arrive Portland → Seaside', loc:'Seaside, OR', lat:45.994, lng:-123.923, miles:0},
+  {id:'jul3', date:'2025-07-03', label:'Slow Day in Cannon Beach', loc:'Cannon Beach, OR', lat:45.892, lng:-123.961, miles:120},
+  {id:'jul4', date:'2025-07-04', label:'4th of July Parade + Fireworks', loc:'Cannon Beach, OR', lat:45.892, lng:-123.961, miles:120},
+  {id:'jul5', date:'2025-07-05', label:'Ecola State Park Hike', loc:'Ecola State Park, OR', lat:45.921, lng:-123.978, miles:125},
+  {id:'jul6', date:'2025-07-06', label:'Cannon Beach + Manzanita', loc:'Manzanita, OR', lat:45.722, lng:-123.938, miles:145},
+  {id:'jul7', date:'2025-07-07', label:'Surf Lesson → Lincoln City', loc:'Lincoln City, OR', lat:44.958, lng:-124.009, miles:220},
+  {id:'jul8', date:'2025-07-08', label:'Devils Punch Bowl + Seal Rock', loc:'Seal Rock, OR', lat:44.497, lng:-124.071, miles:265},
+  {id:'jul9', date:'2025-07-09', label:'Sea Glass at Moolack Beach', loc:'Moolack Beach, OR', lat:44.641, lng:-124.052, miles:255},
+  {id:'jul10', date:'2025-07-10', label:'Drive to Yachats', loc:'Yachats, OR', lat:44.319, lng:-124.108, miles:310},
+  {id:'jul11', date:'2025-07-11', label:'Sandboarding + Thor\'s Well', loc:'Florence / Yachats, OR', lat:43.982, lng:-124.109, miles:330},
+  {id:'jul12', date:'2025-07-12', label:'Sea Lion Cave', loc:'Florence, OR', lat:43.988, lng:-124.126, miles:333},
+  {id:'jul13', date:'2025-07-13', label:'Drive to Crescent City', loc:'Crescent City, CA', lat:41.756, lng:-124.202, miles:530},
+  {id:'jul14', date:'2025-07-14', label:'Grove of Titans + Stout Grove', loc:'Jedediah Smith, CA', lat:41.800, lng:-124.082, miles:545},
+  {id:'jul15', date:'2025-07-15', label:'Fern Canyon', loc:'Prairie Creek, CA', lat:41.394, lng:-124.057, miles:580},
+  {id:'jul16', date:'2025-07-16', label:'Drive to Fort Bragg', loc:'Fort Bragg, CA', lat:39.446, lng:-123.805, miles:760},
+  {id:'jul17', date:'2025-07-17', label:'Arrive Fort Bragg + Mendocino', loc:'Fort Bragg, CA', lat:39.446, lng:-123.805, miles:760},
+  {id:'jul18', date:'2025-07-18', label:'Glass Beach → Drive to Crater Lake', loc:'Crater Lake, OR', lat:42.944, lng:-122.109, miles:1090},
+  {id:'jul19', date:'2025-07-19', label:'Crater Lake Rim Drive', loc:'Crater Lake NP, OR', lat:42.944, lng:-122.109, miles:1090},
+  {id:'jul20', date:'2025-07-20', label:'North Rim + Watchman Peak', loc:'Crater Lake NP, OR', lat:42.944, lng:-122.109, miles:1090},
+  {id:'jul21', date:'2025-07-21', label:'Crater Lake → Bend', loc:'Bend, OR', lat:44.058, lng:-121.315, miles:1190},
+  {id:'jul22', date:'2025-07-22', label:'Smith Rock + Misery Ridge', loc:'Smith Rock SP, OR', lat:44.368, lng:-121.141, miles:1220},
+  {id:'jul23', date:'2025-07-23', label:'Deschutes Float + Bend Town', loc:'Bend, OR', lat:44.058, lng:-121.315, miles:1190},
+  {id:'jul24', date:'2025-07-24', label:'Drive to Portland → Fly Home ✈️', loc:'PDX Airport, OR', lat:45.589, lng:-122.593, miles:1350},
+];
+
+const GLASS_BEACHES = ['Glass Beach (Fort Bragg)','Moolack Beach','Agate Beach','Seal Rock','Whaleshead Beach','Bullards Beach','Manzanita Beach'];
+const EXPOSED_HIKES = ['Misery Ridge','Watchman Peak (Crater Lake)','Indian Sands Trail','Neahkahnie Mountain','Cape Perpetua Trail','Blacklock Point Trail','Ecola State Park Cliffs','Fern Canyon','Stout Grove'];
+const MOODS = ['😴','😊','🤩','😅','🌧️','🤒'];
+const MOOD_LABELS = ['Tired','Good','Amazing!','Tough day','Rained out','Someone got sick'];
+
+const TRIP_START = new Date('2025-07-02');
+const TRIP_END   = new Date('2025-07-24');
+
+// ══════════════════════════════════════════
+// STORAGE
+// ══════════════════════════════════════════
+function lsGet(key){ try{return localStorage.getItem(key)}catch(e){return null} }
+function lsSet(key,val){ try{localStorage.setItem(key,val);return true}catch(e){return false} }
+function lsDel(key){ try{localStorage.removeItem(key)}catch(e){} }
+
+// ══════════════════════════════════════════
+// TOAST
+// ══════════════════════════════════════════
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2200);
+}
+
+// ══════════════════════════════════════════
+// NAV / HAMBURGER
+// ══════════════════════════════════════════
+const menuBtn=document.getElementById('menuBtn');
+const drawer=document.getElementById('drawer');
+const overlay=document.getElementById('overlay');
+menuBtn.addEventListener('click',()=>{
+  const o=drawer.classList.toggle('open');
+  overlay.classList.toggle('open',o);
+  menuBtn.classList.toggle('open',o);
+});
+function closeMenu(){
+  drawer.classList.remove('open');
+  overlay.classList.remove('open');
+  menuBtn.classList.remove('open');
+}
+
+// ══════════════════════════════════════════
+// CARD TOGGLE
+// ══════════════════════════════════════════
+function toggleCard(id){
+  document.getElementById(id).classList.toggle('open');
+}
+
+// ══════════════════════════════════════════
+// DATE UTILS
+// ══════════════════════════════════════════
+function todayStr(){
+  const n=new Date();
+  return n.getFullYear()+'-'+String(n.getMonth()+1).padStart(2,'0')+'-'+String(n.getDate()).padStart(2,'0');
+}
+function daysBetween(a,b){ return Math.round((b-a)/(1000*60*60*24)); }
+
+// ══════════════════════════════════════════
+// PROGRESS BAR + DASHBOARD
+// ══════════════════════════════════════════
+function updateProgress(){
+  const now=new Date(); const today=todayStr();
+  const total=daysBetween(TRIP_START,TRIP_END);
+  const done=Math.min(Math.max(daysBetween(TRIP_START,now),0),total);
+  const pct=Math.round((done/total)*100);
+  const bar=document.getElementById('progressFill');
+  if(bar) bar.style.width=pct+'%';
+  const label=document.getElementById('prog-label');
+  const pctEl=document.getElementById('prog-pct');
+  const navLabel=document.getElementById('nav-today-label');
+
+  if(now < TRIP_START){
+    const days=daysBetween(now,TRIP_START);
+    if(label) label.textContent=days+' days until takeoff!';
+    if(pctEl) pctEl.textContent='';
+  } else if(now > TRIP_END){
+    if(label) label.textContent='Trip complete — memories made! 🎉';
+    if(pctEl) pctEl.textContent='100%';
+  } else {
+    if(label) label.textContent='Day '+done+' of '+total;
+    if(pctEl) pctEl.textContent=pct+'%';
+  }
+
+  // Dashboard
+  const dashDays=document.getElementById('dash-days');
+  const dashDaysSub=document.getElementById('dash-days-sub');
+  const dashLoc=document.getElementById('dash-location');
+  if(dashDays){
+    if(now < TRIP_START){ dashDays.textContent=daysBetween(now,TRIP_START); dashDaysSub.textContent='days until trip'; }
+    else if(now > TRIP_END){ dashDays.textContent=total; dashDaysSub.textContent='trip complete!'; }
+    else { dashDays.textContent=done; dashDaysSub.textContent=`of ${total} days`; }
+  }
+
+  // Find today's stop
+  const todayStop = STOPS.find(s=>s.date===today) || (now>=TRIP_START&&now<=TRIP_END ? STOPS[done] : null);
+  if(dashLoc){
+    if(now < TRIP_START) dashLoc.textContent='Trip starts July 2!';
+    else if(now > TRIP_END) dashLoc.textContent='Back home in PA 🏠';
+    else if(todayStop) dashLoc.textContent=todayStop.label+' — '+todayStop.loc;
+    else dashLoc.textContent='Somewhere amazing on the coast';
+  }
+  if(navLabel){
+    if(now>=TRIP_START && now<=TRIP_END) navLabel.textContent='Day '+done;
+    else if(now<TRIP_START) navLabel.textContent=daysBetween(now,TRIP_START)+'d to go';
+    else navLabel.textContent='Done!';
+  }
+
+  // Miles driven
+  const milesEl=document.getElementById('dash-miles');
+  if(milesEl){
+    let miles=0;
+    if(now>=TRIP_START){
+      STOPS.forEach(s=>{ if(s.date<=today) miles=Math.max(miles,s.miles); });
+    }
+    milesEl.textContent=miles>0?miles.toLocaleString():'0';
+  }
+}
+
+// ══════════════════════════════════════════
+// VISITED STOPS
+// ══════════════════════════════════════════
+function toggleVisited(e, id){
+  e.stopPropagation();
+  const key='trip25_visited_'+id;
+  const current=lsGet(key)==='1';
+  if(current){ lsDel(key); } else { lsSet(key,'1'); }
+  renderVisitedBtn(id);
+  renderStopCardStyle(id);
+  updateVisitedCount();
+  updateMap();
+  showToast(current ? 'Unmarked' : '✅ Marked as visited!');
+}
+function isVisited(id){ return lsGet('trip25_visited_'+id)==='1'; }
+function renderVisitedBtn(id){
+  const btn=document.getElementById('vbtn-'+id);
+  if(!btn) return;
+  if(isVisited(id)){ btn.textContent='✅ Visited'; btn.classList.add('done'); }
+  else { btn.textContent='Mark visited'; btn.classList.remove('done'); }
+}
+function renderStopCardStyle(id){
+  const card=document.getElementById('card-'+id);
+  if(!card) return;
+  const today=todayStr();
+  const stop=STOPS.find(s=>s.id===id);
+  card.classList.remove('is-today','is-visited');
+  if(stop && stop.date===today) card.classList.add('is-today');
+  else if(isVisited(id)) card.classList.add('is-visited');
+}
+function updateVisitedCount(){
+  const total=STOPS.length;
+  const done=STOPS.filter(s=>isVisited(s.id)).length;
+  const el=document.getElementById('dash-visited');
+  const sub=document.getElementById('dash-visited-sub');
+  if(el) el.textContent=done;
+  if(sub) sub.textContent=`of ${total} stops`;
+}
+
+// ══════════════════════════════════════════
+// MAP
+// ══════════════════════════════════════════
+let map, markers=[];
+function initMap(){
+  map=L.map('trip-map',{zoomControl:true,scrollWheelZoom:false}).setView([43.5,-122.5],6);
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{
+    attribution:'© OpenStreetMap © CARTO',maxZoom:19
+  }).addTo(map);
+
+  // Draw route line
+  const coords=STOPS.map(s=>[s.lat,s.lng]);
+  L.polyline(coords,{color:'#7FB5A8',weight:2.5,opacity:.6,dashArray:'6,6'}).addTo(map);
+
+  updateMap();
+}
+
+function makeIcon(color, pulse){
+  const svg=`<svg xmlns="http://www.w3.org/2000/svg" width="26" height="34" viewBox="0 0 26 34">
+    <circle cx="13" cy="13" r="11" fill="${color}" stroke="#fff" stroke-width="2.5" opacity="0.95"/>
+    <polygon points="13,34 7,20 19,20" fill="${color}" opacity="0.9"/>
+    <circle cx="13" cy="13" r="5" fill="#fff" opacity="0.6"/>
+  </svg>`;
+  return L.divIcon({
+    html:`<div style="position:relative">${pulse?`<div class="pulse-ring" style="position:absolute;width:26px;height:26px;border-radius:50%;border:2px solid ${color}"></div>`:''}${svg}</div>`,
+    iconSize:[26,34],iconAnchor:[13,34],popupAnchor:[0,-36],className:''
+  });
+}
+
+function updateMap(){
+  if(!map || !window.L) return;
+  const today=todayStr();
+  markers.forEach(m=>map.removeLayer(m));
+  markers=[];
+
+  // Deduplicate stops by lat/lng for cleaner map (keep last of each location)
+  const seen={};
+  const displayStops=[];
+  STOPS.forEach(s=>{
+    const k=s.lat.toFixed(2)+','+s.lng.toFixed(2);
+    seen[k]=s;
+  });
+  // But we still check visited/today status per stop
+  const locationMap={};
+  STOPS.forEach(s=>{
+    const k=s.lat.toFixed(2)+','+s.lng.toFixed(2);
+    if(!locationMap[k]) locationMap[k]={stop:s,ids:[],dates:[]};
+    locationMap[k].ids.push(s.id);
+    locationMap[k].dates.push(s.date);
+  });
+
+  Object.values(locationMap).forEach(({stop,ids,dates})=>{
+    const isToday=dates.includes(today);
+    const anyVisited=ids.some(id=>isVisited(id));
+    let color=isToday?'#e07020':anyVisited?'#3d7a5e':'#aaaaaa';
+    const icon=makeIcon(color,isToday);
+
+    // Build popup
+    const noteRaw=lsGet('trip25_note_'+stop.id)||'';
+    const noteHtml=noteRaw?`<div class="popup-note">📝 ${noteRaw.substring(0,80)}${noteRaw.length>80?'…':''}</div>`:'';
+    const statusLabel=isToday?'📍 You are here':anyVisited?'✅ Visited':'⏳ Upcoming';
+    const popupHtml=`<div class="popup-date">${stop.date}</div>
+      <div class="popup-title">${stop.loc}</div>
+      <div class="popup-hotel">${statusLabel}</div>
+      ${noteHtml}`;
+
+    const m=L.marker([stop.lat,stop.lng],{icon}).addTo(map);
+    m.bindPopup(popupHtml,{maxWidth:200});
+    markers.push(m);
+
+    // Auto-open today's popup and pan to it
+    if(isToday){ m.openPopup(); map.panTo([stop.lat,stop.lng]); }
+  });
+}
+
+// ══════════════════════════════════════════
+// CHECKLISTS
+// ══════════════════════════════════════════
+function buildChecklist(items, containerId, scoreId, prefix){
+  const container=document.getElementById(containerId);
+  const scoreEl=document.getElementById(scoreId);
+  if(!container) return;
+  container.innerHTML='';
+  items.forEach((item,i)=>{
+    const key=`trip25_check_${prefix}_${i}`;
+    const checked=lsGet(key)==='1';
+    const div=document.createElement('div');
+    div.className='check-item'+(checked?' checked':'');
+    div.innerHTML=`<span class="ck">${checked?'✅':'◻️'}</span>${item}`;
+    div.onclick=()=>{
+      const now=lsGet(key)==='1';
+      if(now) lsDel(key); else lsSet(key,'1');
+      buildChecklist(items,containerId,scoreId,prefix);
+    };
+    container.appendChild(div);
+  });
+  if(scoreEl){
+    const done=items.filter((_,i)=>lsGet(`trip25_check_${prefix}_${i}`)==='1').length;
+    scoreEl.textContent=`${done} / ${items.length}`;
+  }
+}
+
+// ══════════════════════════════════════════
+// MOOD WIDGET
+// ══════════════════════════════════════════
+function buildMood(containerId, stopId){
+  const el=document.getElementById(containerId);
+  if(!el) return;
+  const saved=lsGet('trip25_mood_'+stopId)||'';
+  el.innerHTML=`<div class="mood-row">
+    <span class="mood-label">Day vibe</span>
+    <div class="mood-btns">${MOODS.map((m,i)=>`<button class="mood-btn${saved===String(i)?' selected':''}" title="${MOOD_LABELS[i]}" onclick="saveMood('${stopId}',${i})">${m}</button>`).join('')}</div>
+    ${saved?`<span class="mood-saved">${MOOD_LABELS[Number(saved)]}</span>`:''}
+  </div>`;
+}
+function saveMood(stopId, idx){
+  lsSet('trip25_mood_'+stopId, String(idx));
+  buildMood('mood-'+stopId, stopId);
+  showToast('Vibe saved '+MOODS[idx]);
+}
+
+// ══════════════════════════════════════════
+// NOTES WIDGET
+// ══════════════════════════════════════════
+function buildNotes(containerId, stopId){
+  const el=document.getElementById(containerId);
+  if(!el) return;
+  const saved=lsGet('trip25_note_'+stopId)||'';
+  el.innerHTML=`<div class="notes-section">
+    <div class="widget-label"><span>📝 My Notes</span>
+      <button id="nedit-${stopId}" onclick="toggleNoteEdit('${stopId}')">${saved?'Edit':'Add note'}</button>
+    </div>
+    <div id="ndisplay-${stopId}" class="saved-note">${escHtml(saved)}</div>
+    <div class="note-editor" id="neditor-${stopId}">
+      <textarea class="note-ta" id="nota-${stopId}" placeholder="Reservations, packing list, kids' requests, anything...">${escHtml(saved)}</textarea>
+      <button class="save-btn" onclick="saveNote('${stopId}')">Save</button>
+    </div>
+  </div>`;
+}
+function toggleNoteEdit(id){
+  const ed=document.getElementById('neditor-'+id);
+  const disp=document.getElementById('ndisplay-'+id);
+  const btn=document.getElementById('nedit-'+id);
+  const open=ed.style.display!=='none'&&ed.style.display!=='';
+  if(open){ ed.style.display='none'; disp.style.display=''; btn.textContent='Edit'; }
+  else { ed.style.display='block'; disp.style.display='none'; btn.textContent='Cancel'; document.getElementById('nota-'+id).focus(); }
+}
+function saveNote(id){
+  const val=document.getElementById('nota-'+id).value.trim();
+  lsSet('trip25_note_'+id,val);
+  buildNotes('notes-'+id, id);
+  updateMap();
+  showToast('Note saved ✓');
+}
+
+// ══════════════════════════════════════════
+// BLOG WIDGET
+// ══════════════════════════════════════════
+function buildBlog(containerId, stopId){
+  const el=document.getElementById(containerId);
+  if(!el) return;
+  const raw=lsGet('trip25_blog_'+stopId)||'[]';
+  let entries=[]; try{ entries=JSON.parse(raw); }catch(e){}
+  el.innerHTML=`<div class="blog-section">
+    <div class="widget-label"><span>✏️ Journal</span></div>
+    <button class="blog-add-btn" id="badd-${stopId}" onclick="openBlogEditor('${stopId}')">✏️ Add a journal entry for this stop</button>
+    <div class="blog-editor-wrap" id="beditor-${stopId}">
+      <div class="photo-row">
+        <input class="photo-input" id="bphoto-${stopId}" placeholder="📷 Photo URL (optional — paste a Google Photos share link)"/>
+      </div>
+      <textarea class="blog-ta" id="bta-${stopId}" placeholder="Write about this day... what the kids loved, what surprised you, your favorite moment, what you'd do differently."></textarea>
+      <div class="blog-actions">
+        <button class="blog-save-btn" onclick="saveBlogEntry('${stopId}')">Save Entry</button>
+        <button class="blog-cancel-btn" onclick="closeBlogEditor('${stopId}')">Cancel</button>
+      </div>
+    </div>
+    <div id="bentries-${stopId}">${renderEntries(entries, stopId)}</div>
+  </div>`;
+}
+function renderEntries(entries, stopId){
+  if(!entries||!entries.length) return '';
+  return entries.map((e,i)=>`
+    <div class="blog-entry">
+      ${e.photo?`<img class="blog-entry-photo" src="${e.photo}" alt="Trip photo" onerror="this.style.display='none'"/>`:''}
+      <div class="blog-entry-date">${e.date}</div>
+      <div class="blog-entry-text">${escHtml(e.text)}</div>
+      <div class="blog-entry-actions">
+        <button class="blog-edit-btn" onclick="editBlogEntry('${stopId}',${i})">✏️ Edit</button>
+        <button class="blog-del-btn" onclick="delBlogEntry('${stopId}',${i})">🗑 Delete</button>
+      </div>
+    </div>`).join('');
+}
+function openBlogEditor(id){
+  document.getElementById('beditor-'+id).classList.add('open');
+  document.getElementById('badd-'+id).style.display='none';
+  document.getElementById('bta-'+id).focus();
+}
+function closeBlogEditor(id){
+  document.getElementById('beditor-'+id).classList.remove('open');
+  document.getElementById('badd-'+id).style.display='';
+  document.getElementById('bta-'+id).value='';
+  document.getElementById('bphoto-'+id).value='';
+  // Reset save button
+  const btn=document.querySelector(`#beditor-${id} .blog-save-btn`);
+  if(btn) btn.onclick=()=>saveBlogEntry(id);
+}
+function saveBlogEntry(stopId, editIdx){
+  const text=document.getElementById('bta-'+stopId).value.trim();
+  if(!text) return;
+  const photo=document.getElementById('bphoto-'+stopId).value.trim();
+  const raw=lsGet('trip25_blog_'+stopId)||'[]';
+  let entries=[]; try{entries=JSON.parse(raw);}catch(e){}
+  const now=new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric',hour:'2-digit',minute:'2-digit'});
+  if(editIdx!==undefined){ entries[editIdx]={text,photo,date:now}; }
+  else { entries.push({text,photo,date:now}); }
+  lsSet('trip25_blog_'+stopId,JSON.stringify(entries));
+  buildBlog('blog-'+stopId, stopId);
+  showToast('Journal entry saved ✓');
+}
+function editBlogEntry(stopId, idx){
+  const raw=lsGet('trip25_blog_'+stopId)||'[]';
+  let entries=[]; try{entries=JSON.parse(raw);}catch(e){}
+  const e=entries[idx]; if(!e) return;
+  document.getElementById('bta-'+stopId).value=e.text||'';
+  document.getElementById('bphoto-'+stopId).value=e.photo||'';
+  openBlogEditor(stopId);
+  const btn=document.querySelector(`#beditor-${stopId} .blog-save-btn`);
+  if(btn) btn.onclick=()=>saveBlogEntry(stopId,idx);
+}
+function delBlogEntry(stopId, idx){
+  if(!confirm('Delete this journal entry?')) return;
+  const raw=lsGet('trip25_blog_'+stopId)||'[]';
+  let entries=[]; try{entries=JSON.parse(raw);}catch(e){}
+  entries.splice(idx,1);
+  lsSet('trip25_blog_'+stopId,JSON.stringify(entries));
+  buildBlog('blog-'+stopId,stopId);
+  showToast('Entry deleted');
+}
+
+function escHtml(s){
+  if(!s) return '';
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
+}
+
+// ══════════════════════════════════════════
+// HIGHLIGHT TODAY'S CARD
+// ══════════════════════════════════════════
+function highlightToday(){
+  const today=todayStr();
+  STOPS.forEach(s=>{
+    const card=document.getElementById('card-'+s.id);
+    if(!card) return;
+    card.classList.remove('is-today','is-visited');
+    if(s.date===today){ card.classList.add('is-today'); card.classList.add('open'); }
+    else if(isVisited(s.id)) card.classList.add('is-visited');
+  });
+}
+
+// ══════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════
+function loadLeaflet(cb){
+  if(window.L){ cb(); return; }
+  const s=document.createElement('script');
+  s.src='https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
+  s.onload=cb;
+  s.onerror=()=>{
+    // CDN failed (e.g. sandboxed environment) — hide map gracefully
+    const mw=document.querySelector('.map-wrap');
+    if(mw) mw.innerHTML='<div style="display:flex;align-items:center;justify-content:center;height:100%;color:#aaa;font-size:.8rem;font-family:Inter,sans-serif;text-align:center;padding:1rem">🗺 Map loads when hosted on GitHub Pages or opened in a browser with internet access.</div>';
+  };
+  document.head.appendChild(s);
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  updateProgress();
+  highlightToday();
+  updateVisitedCount();
+
+  STOPS.forEach(s=>{
+    renderVisitedBtn(s.id);
+    buildMood('mood-'+s.id, s.id);
+    buildNotes('notes-'+s.id, s.id);
+    buildBlog('blog-'+s.id, s.id);
+  });
+
+  buildChecklist(GLASS_BEACHES,'glass-checks','glass-score','glass');
+  buildChecklist(EXPOSED_HIKES,'hike-checks','hike-score','hike');
+
+  loadLeaflet(initMap);
+});
+</script>
+</body>
+</html>
